@@ -1,0 +1,26 @@
+{
+  "name": "demo8ball",
+  "version": "0.0.2",
+  "description": "The 8 ball game",
+  "main": "server.js",
+  "scripts": {
+  },
+  "keywords": [
+    "8ball",
+    "game"
+  ],
+  "author": "virgil-spruit",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "latest",
+    "express.io": "latest",
+    "express": "latest"
+  },
+  "engines": {
+    "node": "4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git@heroku.com:go8ball.git"
+  }
+}

@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta charset='utf-8' />
+
+    <title>8-ball</title>
+
+    <meta name="description" content="A WebGL physics game built on sockets.">
+    <meta name="keywords" content="socket, webgl, physics, game, balance">
+    <meta name="author" content="Virgil Spruit">
+    <meta content='width=device-width, initial-scale=1' name='viewport'>
+
+    <script src="js/vendor/modernizr.custom.04512.js"></script>
+  
+    <link href="images/fav-icon.png" rel="icon">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300" rel='stylesheet' type='text/css'>
+    
+    <link rel='stylesheet' href='css/site.css' type='text/css' media='all'>
+</head>
+
+<body>
+
+    <div id="container"></div>
+
+    <div id="overlay"></div>
+    <div id="main"></div>
+    <div id="gameConnect">
+        Please open up this page with your phone and enter code <span id="socketId"></span>
+    </div>
+    <div id="tip">
+      Tip: try hitting the 1,2 or 3 on your keyboard.
+    </div>
+    <div id="controller">
+        <div id="socket">
+            <input type="text" name="socketId" />
+            <input type="button" id="connect" value="Connect" />
+        </div>
+        <div id="wheel">
+            <p>Tilt your phone and tap the screen.</p>
+        </div>
+        <div id="status"></div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.10.1/TweenMax.min.js"></script>
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+    
+    <script src="js/three.min.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/physijs/physi.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
