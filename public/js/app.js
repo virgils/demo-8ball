@@ -7,7 +7,7 @@ var container = document.getElementById('container');
 var camera, scene, renderer;
 var sceneW, sceneH;
 var physicsMaterial;
-var ground;
+var table;
 var clock = new THREE.Clock();
 var ball = [];
 
@@ -21,7 +21,7 @@ var initScene = function() {
     buildPhysicsScene();
     buildRenderer();
     buildCamera();
-    buildGround();
+    buildTable();
     buildBall(8);
     buildLights();
 
@@ -117,11 +117,11 @@ var buildPhysicsScene = function() {
     scene.setGravity(new THREE.Vector3(0, -800, 0));
 };
 
-// build the ground plane and rotate it to be flat ------------------------------------------------
-var buildGround = function() {
-    var groundGeometry = new THREE.PlaneGeometry(650, 500, 10, 10);    
+// build the table plane and rotate it to be flat ------------------------------------------------
+var buildTable = function() {
+    var tableGeometry = new THREE.PlaneGeometry(650, 500, 10, 10);    
 
-    var groundMaterial = Physijs.createMaterial(
+    var tableMaterial = Physijs.createMaterial(
         new THREE.MeshPhongMaterial({
             shininess: 1,
             color: 0xb00000,
@@ -132,12 +132,12 @@ var buildGround = function() {
         .4 // restitution
     );
 
-    ground = new Physijs.HeightfieldMesh(groundGeometry, groundMaterial, 0);
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    ground.castShadow = true;
+    table = new Physijs.HeightfieldMesh(tableGeometry, tableMaterial, 0);
+    table.rotation.x = -Math.PI / 2;
+    table.receiveShadow = true;
+    table.castShadow = true;
 
-    scene.add(ground);
+    scene.add(table);
 };
 
 
@@ -147,10 +147,10 @@ var buildBall = function(numberBall) {
     var ballTexture = new THREE.Texture();
     var ballIndex = ball.length;
 
+    // add the texture
     ballTexture = THREE.ImageUtils.loadTexture('textures/' + numberBall + '_Ball.jpg', function(image) {
         ballTexture.image = image;
     });
-
 
     // create the physijs-enabled material with some decent friction & bounce properties
     var ballMaterial = Physijs.createMaterial(
@@ -175,30 +175,31 @@ var buildBall = function(numberBall) {
         100
     );
 
+    // y offset to the top of the canvas
     ball[ballIndex].position.y = 500;
-    ball[ballIndex].rotation.y = degToRad(-45);
 
+    // shadows
     ball[ballIndex].receiveShadow = true;
     ball[ballIndex].castShadow = true;
+
+    // add the ball to your canvas
     scene.add(ball[ballIndex]);
 
 };
 
-var bounceGround = function() {
-    ground.setLinearVelocity(new THREE.Vector3(0, 500, 0));
+var bounceTable = function() {
+    table.setLinearVelocity(new THREE.Vector3(0, 500, 0));
 
-    TweenMax.to(ground.position, 0.4, {
+    TweenMax.to(table.position, 0.4, {
         y: 200,
         onUpdate: function() {
-            ground.__dirtyPosition = true;
+            table.__dirtyPosition = true;
 
-            TweenMax.to(ground.position, 1, {
+            TweenMax.to(table.position, 1, {
                 y: 0,
                 onUpdate: function() {
-                    ground.__dirtyPosition = true;
-
-                    ground.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-
+                    table.__dirtyPosition = true;
+                    table.setLinearVelocity(new THREE.Vector3(0, 0, 0));
                 }
             });
 
@@ -378,22 +379,22 @@ var initGame = function() {
 
         });
 
-        // Create balls / Bounce ground on spacebar
-        $('body').unbind('keydown').keydown(function(e) {
-            if (e.keyCode == 49) {
+        // Create balls / slam table on spacebar
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 49) { // key: 1
                 buildBall(1);
-            } else if (e.keyCode == 50) {
+            } else if (e.keyCode == 50) { // key: 1
                 buildBall(2);
-            } else if (e.keyCode == 51) {
+            } else if (e.keyCode == 51) { // key: 1
                 buildBall(3);
-            } else if (e.keyCode == 32) {
-                bounceGround();
+            } else if (e.keyCode == 32) { // key: spacebar
+                bounceTable();
             }
         });
 
-        // on tap bounce ground
+        // on tap bounce table
         socket.on('tap', function(data) {
-            bounceGround();
+            bounceTable();
         });
 
         // handle incoming gyro data
@@ -401,12 +402,12 @@ var initGame = function() {
 
             var degY = data[1] < 0 ? Math.abs(data[1]) : -data[1];
 
-            TweenMax.to(ground.rotation, 0.3, {
+            TweenMax.to(table.rotation, 0.3, {
                 x: degToRad(degY - 90),
                 y: degToRad(data[0]),
                 ease: Linear.easeNone,
                 onUpdate: function() {
-                    ground.__dirtyRotation = true;
+                    table.__dirtyRotation = true;
                 }
             });
         });
